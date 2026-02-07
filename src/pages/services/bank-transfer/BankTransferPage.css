@@ -1,0 +1,290 @@
+.bank-transfer-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  display: flex;
+}
+
+.bank-transfer-main {
+  flex: 1;
+  margin-left: 280px;
+  min-height: 100vh;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bank-transfer-content {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.bank-transfer-hero {
+  background: white;
+  border-radius: 18px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.bank-transfer-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin: 0 0 8px 0;
+}
+
+.bank-transfer-title {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.bank-transfer-subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+  max-width: 620px;
+}
+
+.bank-transfer-back {
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bank-transfer-back:hover {
+  border-color: #cbd5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+}
+
+.bank-transfer-form {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bank-transfer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.bank-details-card {
+  background: #f9fafb;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 220px;
+}
+
+.bank-details-header {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.bank-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bank-field span {
+  text-transform: none;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  color: #6b7280;
+}
+
+.bank-field input {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: white;
+  font-size: 0.95rem;
+  color: #1f2937;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bank-field input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.bank-field input:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.bank-field-error {
+  margin: 0;
+  color: #ef4444;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.bank-transfer-extra {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  overflow: hidden;
+  transition: max-height 0.45s ease, opacity 0.45s ease, transform 0.45s ease;
+}
+
+.bank-transfer-extra.is-visible {
+  max-height: 900px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bank-transfer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bank-transfer-helper {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.bank-transfer-action {
+  border: none;
+  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 20px rgba(79, 70, 229, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.bank-transfer-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(79, 70, 229, 0.32);
+}
+
+.bank-transfer-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.bank-transfer-confirmation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.bank-transfer-confirmation.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.confirmation-card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirmation-face {
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.confirmation-label {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.confirmation-amount {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.confirmation-meta {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #6b7280;
+}
+
+.face-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #eef2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4338ca;
+}
+
+@media (max-width: 1024px) {
+  .bank-transfer-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .bank-transfer-main {
+    margin-left: 80px;
+  }
+
+  .bank-transfer-content {
+    padding: 20px;
+  }
+}

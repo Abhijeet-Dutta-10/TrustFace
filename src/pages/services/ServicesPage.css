@@ -1,0 +1,331 @@
+.services-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  display: flex;
+}
+
+.services-main {
+  flex: 1;
+  margin-left: 280px;
+  min-height: 100vh;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.services-content {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.services-hero {
+  background: white;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.services-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.20rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin: 0 1 10px 0;
+  padding-left: 25px;
+}
+
+.services-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+/* .services-subtitle {
+  font-size: 1.05rem;
+  color: #6b7280;
+  margin: 0;
+  max-width: 560px;
+} */
+
+.services-heading-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(560px, 100%);
+}
+
+.heading-label {
+  font-size: 0.72rem;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.services-search {
+  position: relative;
+  flex: 1;
+}
+
+.services-search input {
+  width: 100%;
+  min-width: 320px;
+  padding: 10px 12px 10px 36px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: white;
+  transition: all 0.2s;
+  color: #1f2937;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.services-search input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.services-search input::placeholder {
+  color: #9ca3af;
+}
+
+.services-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.services-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.highlight-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.highlight-title {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.highlight-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.highlight-meta {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+.services-empty {
+  grid-column: 1 / -1;
+  background: white;
+  border-radius: 14px;
+  border: 1px dashed #d1d5db;
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+
+.service-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.service-card:focus,
+.service-card:focus-visible {
+  outline: none;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.service-header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.service-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #eef2ff;
+  color: #4338ca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 0;
+}
+
+.service-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.service-category {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+}
+
+.service-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.service-description {
+  color: #6b7280;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.service-cta {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+.services-support {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.services-support h2 {
+  font-size: 1.35rem;
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.services-support p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.services-support-button {
+  border: none;
+  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(79, 70, 229, 0.25);
+}
+
+.services-support-button:hover {
+  opacity: 0.92;
+}
+
+.services-support-button:focus,
+.services-support-button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+  .services-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .services-heading-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .services-main {
+    margin-left: 80px;
+  }
+
+  .services-content {
+    padding: 20px;
+  }
+
+  .services-support {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -43,8 +43,15 @@ const HomePage = () => {
   };
 
   const handleBalanceSwitch = () => {
-    setActiveBalanceIndex((prev) => (prev + 1) % balances.length);
+    if (isBalanceLoading) {
+      return;
+    }
+    setIsBalanceLoading(true);
     setIsBalanceVisible(false);
+    window.setTimeout(() => {
+      setActiveBalanceIndex((prev) => (prev + 1) % balances.length);
+      setIsBalanceLoading(false);
+    }, 700);
   };
 
   return (

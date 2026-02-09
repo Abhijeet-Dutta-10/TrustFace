@@ -128,14 +128,18 @@
   margin-top: -2rem;
   margin-bottom: 0;
   padding-bottom: 1.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .auth-content::-webkit-scrollbar {
-  width: 4px;
+  width: 0;
+  height: 0;
 }
 
 .auth-content::-webkit-scrollbar-track {
   background: transparent;
+  border-radius: 0;
 }
 
 .auth-content::-webkit-scrollbar-thumb {
@@ -248,6 +252,14 @@
   animation: tabActivePulse 0.3s ease-out;
 }
 
+.auth-tab:focus,
+.auth-tab:focus-visible,
+.auth-tab:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @keyframes tabActivePulse {
   0% {
     transform: scale(1);
@@ -302,6 +314,15 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
+
+.auth-social-button:focus,
+.auth-social-button:focus-visible,
+.auth-social-button:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 
 .auth-social-icon {
   background: white;
@@ -754,6 +775,14 @@
   background: #1f2937;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.auth-submit-button:focus,
+.auth-submit-button:focus-visible,
+.auth-submit-button:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .auth-submit-button:disabled {

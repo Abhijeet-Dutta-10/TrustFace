@@ -246,6 +246,14 @@
   transition: transform 0.1s ease;
 }
 
+.start-button:focus,
+.start-button:focus-visible,
+.start-button:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .start-button::before {
   content: '';
   position: absolute;

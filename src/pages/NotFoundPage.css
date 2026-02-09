@@ -1,0 +1,120 @@
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 2rem; */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  color: #000000;
+  text-align: center;
+}
+
+.not-found-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 2.5rem 2.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+.not-found-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.not-found-logo {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+}
+
+.not-found-app-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.not-found-code {
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #090a0a;
+}
+
+.not-found-title {
+  margin: 0.5rem 0 0.75rem;
+  font-size: 2rem;
+  color: #0f172a;
+}
+
+.not-found-message {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.not-found-hint {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.not-found-action {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.not-found-action:focus,
+.not-found-action:focus-visible,
+.not-found-action:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.not-found-action:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.not-found-action:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.not-found-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

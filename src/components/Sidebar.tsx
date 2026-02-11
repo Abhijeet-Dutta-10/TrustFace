@@ -111,16 +111,6 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
       badge: 2 
     },
     { 
-      name: 'Profile', 
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      ), 
-      badge: null 
-    },
-    { 
       name: 'Settings', 
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -132,6 +122,17 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
   ];
 
   const bottomItems: MenuItem[] = [
+    { 
+      name: 'Log out', 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      ), 
+      badge: null 
+    },
     { 
       name: 'Help', 
       icon: (
@@ -285,7 +286,13 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
           <button
             key={item.name}
             className="menu-item"
-            onClick={() => setActiveItem(item.name)}
+            onClick={() => {
+              if (item.name === 'Log out') {
+                navigate('/auth');
+                return;
+              }
+              setActiveItem(item.name);
+            }}
             title={isCollapsed ? item.name : ''}
           >
             <div className="menu-icon">{item.icon}</div>

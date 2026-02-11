@@ -89,7 +89,7 @@ const TransactionsHistoryPage = () => {
       subtitle: 'Monthly subscription',
       time: '01 Feb 2026 • 11:00 AM',
       amount: '₹ 799',
-      direction: 'outgoing',
+      direction: 'failed',
       status: 'failed',
       account: 'Primary Account',
       method: 'Card • Visa 2456',

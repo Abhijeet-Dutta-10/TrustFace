@@ -708,7 +708,7 @@
   transition: all 0.3s ease;
 }
 
-.strength-bar.low {
+.strength-bar.poor {
   background: #ef4444;
 }
 
@@ -727,7 +727,7 @@
   text-align: right;
 }
 
-.password-strength-text.low {
+.password-strength-text.poor {
   color: #ef4444;
 }
 

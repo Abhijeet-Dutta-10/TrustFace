@@ -7,8 +7,8 @@ import './HomePage.css';
 const HomePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { user_id?: string; email?: string } | null;
-  const userName = 'Abcd';
+  const state = location.state as { user_id?: string; email?: string; name?: string } | null;
+  const userName = state?.name || 'Abcd';
   const userInitial = userName.trim().charAt(0).toUpperCase() || 'U';
   const [isBalanceVisible, setIsBalanceVisible] = useState(false);
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
@@ -62,7 +62,9 @@ const HomePage = () => {
           <section className="hero-section">
             <div className="hero-header">
               <div className="hero-text">
-                <h1 className="home-title">Welcome to TrustFace</h1>
+                <h1 className="home-title">
+                  {state?.name ? `Welcome ${state.name}` : 'Welcome'}
+                </h1>
                 <p className="home-subtitle">Your secure facial recognition payment platform</p>
                 <div className="home-badges">
                   {state?.email && (
@@ -71,6 +73,152 @@ const HomePage = () => {
                   {state?.user_id && (
                     <span className="info-pill">User ID {state.user_id}</span>
                   )}
+                </div>
+                <div className="hero-cards">
+                  <div className="hero-card balance-card">
+                    <div className="balance-content">
+                      <div className="balance-main">
+                        <div className="balance-header">
+                          <p className="card-label">
+                            Available Balance
+                            <span className="balance-header-meta">
+                              &nbsp;&nbsp;•&nbsp;&nbsp; {balances[activeBalanceIndex].label}
+                            </span>
+                          </p>
+                        </div>
+                        <p className={`card-value ${isBalanceLoading ? 'balance-loading' : ''}`}>
+                          {isBalanceLoading
+                            ? 'Loading...'
+                            : isBalanceVisible
+                              ? balances[activeBalanceIndex].amount
+                              : 'View Balance'}
+                        </p>
+                        <p className="card-subtitle">{lastUpdated}</p>
+                        <div className="balance-dots" aria-hidden="true">
+                          {balances.map((balance, index) => (
+                            <span
+                              key={balance.label}
+                              className={`balance-dot ${index === activeBalanceIndex ? 'active' : ''}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="balance-side">
+                        <button
+                          className="balance-icon-button"
+                          type="button"
+                          onClick={handleBalanceSwitch}
+                          aria-label="Switch balance card"
+                        >
+                          <span className="balance-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M16 3h5v5"/>
+                              <path d="M21 3 15 9"/>
+                              <path d="M8 21H3v-5"/>
+                              <path d="M3 21l6-6"/>
+                            </svg>
+                          </span>
+                        </button>
+                        <button
+                          className="balance-icon-button"
+                          type="button"
+                          onClick={handleBalanceRefresh}
+                          aria-label="Refresh balance"
+                          disabled={isRefreshLoading}
+                        >
+                          <span className="balance-icon">
+                            <svg className={isRefreshLoading ? 'spin' : ''} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="23 4 23 10 17 10"/>
+                              <polyline points="1 20 1 14 7 14"/>
+                              <path d="M3.5 9a9 9 0 0 1 14.1-3.36L23 10"/>
+                              <path d="M20.5 15a9 9 0 0 1-14.1 3.36L1 14"/>
+                            </svg>
+                          </span>
+                        </button>
+                        <button
+                          className="balance-icon-button"
+                          type="button"
+                          onClick={handleBalanceReveal}
+                          aria-label="Show balance"
+                          disabled={isBalanceLoading}
+                        >
+                          <span className="balance-icon">
+                            {isBalanceVisible ? (
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                              </svg>
+                            ) : (
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.67 21.67 0 0 1 5.06-6.88"/>
+                                <path d="M1 1l22 22"/>
+                                <path d="M9.53 9.53A3 3 0 0 0 12 15a3 3 0 0 0 2.47-5.47"/>
+                                <path d="M14.12 6.88A10.94 10.94 0 0 1 23 12s-1.22 2.45-3.5 4.75"/>
+                              </svg>
+                            )}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hero-card rewards-card">
+                    <div className="rewards-content">
+                      <div className="rewards-main">
+                        <p className="card-label">Rewards</p>
+                        <p className="card-value">₹ 1,240</p>
+                        <p className="card-subtitle">Points this month</p>
+                      </div>
+                      <div className="rewards-side">
+                        <span className="rewards-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="8" width="18" height="13" rx="2"/>
+                            <line x1="12" y1="8" x2="12" y2="21"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <path d="M7.5 8a2.5 2.5 0 1 1 0-5c2 0 4.5 5 4.5 5s2.5-5 4.5-5a2.5 2.5 0 1 1 0 5"/>
+                          </svg>
+                        </span>
+                        <span className="rewards-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.6 5.8 21 7 14 2 9.3 9 8.5 12 2"/>
+                          </svg>
+                        </span>
+                        <span className="rewards-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="8" r="5"/>
+                            <path d="M8.21 13.89 7 22l5-3 5 3-1.21-8.11"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hero-card security-card">
+                    <div className="security-content">
+                      <div className="security-main">
+                        <p className="card-label">Security Status</p>
+                        <p className="card-value">Biometric Shield</p>
+                        <p className="card-subtitle">Face ID active</p>
+                      </div>
+                      <div className="security-side">
+                        <span className="security-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2 4 5v6c0 5.25 3.5 9.75 8 11 4.5-1.25 8-5.75 8-11V5l-8-3z"/>
+                          </svg>
+                        </span>
+                        <span className="security-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="6" y="11" width="12" height="9" rx="2"/>
+                            <path d="M9 11V7a3 3 0 0 1 6 0v4"/>
+                          </svg>
+                        </span>
+                        <span className="security-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="10" r="4"/>
+                            <path d="M5 21a7 7 0 0 1 14 0"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="hero-actions">
@@ -94,152 +242,6 @@ const HomePage = () => {
                 >
                   <span className="profile-avatar" aria-hidden="true">{userInitial}</span>
                 </button>
-              </div>
-            </div>
-            <div className="hero-cards">
-              <div className="hero-card balance-card">
-                <div className="balance-content">
-                  <div className="balance-main">
-                    <div className="balance-header">
-                      <p className="card-label">
-                        Available Balance
-                        <span className="balance-header-meta">
-                          &nbsp;&nbsp;•&nbsp;&nbsp; {balances[activeBalanceIndex].label}
-                        </span>
-                      </p>
-                    </div>
-                    <p className={`card-value ${isBalanceLoading ? 'balance-loading' : ''}`}>
-                      {isBalanceLoading
-                        ? 'Loading...'
-                        : isBalanceVisible
-                          ? balances[activeBalanceIndex].amount
-                          : 'View Balance'}
-                    </p>
-                    <p className="card-subtitle">{lastUpdated}</p>
-                    <div className="balance-dots" aria-hidden="true">
-                      {balances.map((balance, index) => (
-                        <span
-                          key={balance.label}
-                          className={`balance-dot ${index === activeBalanceIndex ? 'active' : ''}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="balance-side">
-                    <button
-                      className="balance-icon-button"
-                      type="button"
-                      onClick={handleBalanceSwitch}
-                      aria-label="Switch balance card"
-                    >
-                      <span className="balance-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M16 3h5v5"/>
-                          <path d="M21 3 15 9"/>
-                          <path d="M8 21H3v-5"/>
-                          <path d="M3 21l6-6"/>
-                        </svg>
-                      </span>
-                    </button>
-                    <button
-                      className="balance-icon-button"
-                      type="button"
-                      onClick={handleBalanceRefresh}
-                      aria-label="Refresh balance"
-                      disabled={isRefreshLoading}
-                    >
-                      <span className="balance-icon">
-                        <svg className={isRefreshLoading ? 'spin' : ''} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="23 4 23 10 17 10"/>
-                          <polyline points="1 20 1 14 7 14"/>
-                          <path d="M3.5 9a9 9 0 0 1 14.1-3.36L23 10"/>
-                          <path d="M20.5 15a9 9 0 0 1-14.1 3.36L1 14"/>
-                        </svg>
-                      </span>
-                    </button>
-                    <button
-                      className="balance-icon-button"
-                      type="button"
-                      onClick={handleBalanceReveal}
-                      aria-label="Show balance"
-                      disabled={isBalanceLoading}
-                    >
-                      <span className="balance-icon">
-                        {isBalanceVisible ? (
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                          </svg>
-                        ) : (
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.67 21.67 0 0 1 5.06-6.88"/>
-                            <path d="M1 1l22 22"/>
-                            <path d="M9.53 9.53A3 3 0 0 0 12 15a3 3 0 0 0 2.47-5.47"/>
-                            <path d="M14.12 6.88A10.94 10.94 0 0 1 23 12s-1.22 2.45-3.5 4.75"/>
-                          </svg>
-                        )}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="hero-card rewards-card">
-                <div className="rewards-content">
-                  <div className="rewards-main">
-                    <p className="card-label">Rewards</p>
-                    <p className="card-value">₹ 1,240</p>
-                    <p className="card-subtitle">Points this month</p>
-                  </div>
-                  <div className="rewards-side">
-                    <span className="rewards-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="8" width="18" height="13" rx="2"/>
-                        <line x1="12" y1="8" x2="12" y2="21"/>
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <path d="M7.5 8a2.5 2.5 0 1 1 0-5c2 0 4.5 5 4.5 5s2.5-5 4.5-5a2.5 2.5 0 1 1 0 5"/>
-                      </svg>
-                    </span>
-                    <span className="rewards-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.6 5.8 21 7 14 2 9.3 9 8.5 12 2"/>
-                      </svg>
-                    </span>
-                    <span className="rewards-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="8" r="5"/>
-                        <path d="M8.21 13.89 7 22l5-3 5 3-1.21-8.11"/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="hero-card security-card">
-                <div className="security-content">
-                  <div className="security-main">
-                    <p className="card-label">Security Status</p>
-                    <p className="card-value">Biometric Shield</p>
-                    <p className="card-subtitle">Face ID active</p>
-                  </div>
-                  <div className="security-side">
-                    <span className="security-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2 4 5v6c0 5.25 3.5 9.75 8 11 4.5-1.25 8-5.75 8-11V5l-8-3z"/>
-                      </svg>
-                    </span>
-                    <span className="security-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="6" y="11" width="12" height="9" rx="2"/>
-                        <path d="M9 11V7a3 3 0 0 1 6 0v4"/>
-                      </svg>
-                    </span>
-                    <span className="security-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="10" r="4"/>
-                        <path d="M5 21a7 7 0 0 1 14 0"/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </section>

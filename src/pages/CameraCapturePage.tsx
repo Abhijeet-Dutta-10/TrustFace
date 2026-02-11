@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactCountryFlag from 'react-country-flag';
+import { registerUser } from '../services/authService';
 import './CameraCapturePage.css';
 
 interface LocationState {
@@ -17,6 +18,7 @@ interface LocationState {
     password: string;
   };
   countryCode?: string;
+  phoneCode?: string;
 }
 
 const CameraCapturePage = () => {
@@ -27,12 +29,14 @@ const CameraCapturePage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const captureInFlightRef = useRef(false);
   
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [error, setError] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
+  const isErrorVisible = Boolean(error);
 
   // Mapping of dial codes to ISO country codes
   // Note: For shared dial codes like +1 (US/Canada), the first match (US) will be used
@@ -211,6 +215,9 @@ const CameraCapturePage = () => {
   };
 
   const startCountdown = () => {
+    if (isCapturing || isProcessing || captureInFlightRef.current) {
+      return;
+    }
     setCountdown(3);
     setIsCapturing(true);
     
@@ -228,6 +235,7 @@ const CameraCapturePage = () => {
 
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return;
+    if (captureInFlightRef.current) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -239,52 +247,42 @@ const CameraCapturePage = () => {
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0);
 
-    const imageData = canvas.toDataURL('image/jpeg', 0.8);
-    const base64Image = imageData.split(',')[1];
+    const imageData = canvas.toDataURL('image/jpeg', 0.7);
 
     // Stop camera immediately after capturing
     stopCamera();
     setCameraReady(false);
 
-    handleImageCapture(base64Image);
+    handleImageCapture(imageData);
   };
 
-  const handleImageCapture = async (base64Image: string) => {
+  const handleImageCapture = async (imageBase64: string) => {
+    if (captureInFlightRef.current) {
+      return;
+    }
+    captureInFlightRef.current = true;
     setIsProcessing(true);
     setError('');
 
     try {
       if (state?.mode === 'register' && state.formData) {
-        // Register flow: Call consent API after capturing
-        const response = await fetch('https://ljuyvviqx0.execute-api.us-east-1.amazonaws.com/dev/consent', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: `temp_${Date.now()}`, // Temporary ID, API will return actual user_id
-            consent: true,
-            profile: {
-              name: state.formData.name,
-              email: state.formData.email,
-              phone: state.formData.phone,
-            },
-            image: base64Image, // Include base64 image
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to register user');
+        if (!imageBase64.startsWith('data:image/jpeg;base64,')) {
+          throw new Error('Invalid image format. Please recapture.');
         }
-
-        const data = await response.json();
-        console.log('Registration successful:', data);
+        const data = await registerUser({
+          name: state.formData.name,
+          email: state.formData.email,
+          phoneNo: state.formData.phone,
+          password: state.formData.password,
+          imageBase64,
+        });
         
         // Ensure camera is stopped before navigation
         stopCamera();
         
         // Navigate to home page on success
-        navigate('/home', { state: { user_id: data.user_id } });
+        // alert(`Welcome to TrustFace ${data.name}`);
+        navigate('/home', { state: { name: data.name, email: state.formData.email } });
       } else if (state?.mode === 'login') {
         // Login flow: Verify API will be called
         // Ensure camera is stopped before navigation
@@ -301,12 +299,14 @@ const CameraCapturePage = () => {
       }
     } catch (err) {
       console.error('API error:', err);
-      setError('Failed to process. Please try again.');
+      const message = err instanceof Error ? err.message : 'Failed to process. Please try again.';
+      setError(message);
       setIsCapturing(false);
       // Restart camera on error so user can try again
       startCamera();
     } finally {
       setIsProcessing(false);
+      captureInFlightRef.current = false;
     }
   };
 
@@ -322,7 +322,8 @@ const CameraCapturePage = () => {
         state: { 
           returnedFormData: state.formData,
           mode: 'register',
-          countryCode: state?.countryCode
+          countryCode: state?.countryCode,
+          phoneCode: state?.phoneCode
         } 
       });
     } else if (state?.mode === 'login' && state?.loginData) {
@@ -336,6 +337,30 @@ const CameraCapturePage = () => {
     } else {
       navigate('/auth');
     }
+  };
+
+  const handleErrorAction = () => {
+    stopCamera();
+    setCameraReady(false);
+
+    const isUserExists = /already exists/i.test(error);
+    if (isUserExists) {
+      navigate('/auth', {
+        state: {
+          returnedLoginData: {
+            email: state?.formData?.email || state?.email || '',
+            password: state?.formData?.password || '',
+          },
+          mode: 'login',
+        },
+      });
+      return;
+    }
+
+    setError('');
+    setIsCapturing(false);
+    setCountdown(null);
+    startCamera();
   };
 
   return (
@@ -446,7 +471,11 @@ const CameraCapturePage = () => {
                     </div>
                     <div className="detail-content">
                       <span className="detail-label">Phone Number</span>
-                      <span className="detail-value">{formatPhoneNumber(state.formData.phone)}</span>
+                      <span className="detail-value">
+                        {state?.phoneCode
+                          ? `${state.phoneCode} ${state.formData.phone}`
+                          : formatPhoneNumber(state.formData.phone)}
+                      </span>
                     </div>
                     {(state?.countryCode || getCountryCodeFromPhone(state.formData.phone)) && (
                       <div className="detail-country-flag">
@@ -521,8 +550,8 @@ const CameraCapturePage = () => {
               {error && (
                 <div className="camera-error">
                   <p>{error}</p>
-                  <button onClick={handleCancel} className="error-button">
-                    Go Back
+                  <button onClick={handleErrorAction} className="error-button">
+                    {/already exists/i.test(error) ? 'Sign In' : 'Try Again'}
                   </button>
                 </div>
               )}
@@ -553,7 +582,7 @@ const CameraCapturePage = () => {
             </div>
 
             <div className="camera-controls">
-              {!isCapturing && !isProcessing && cameraReady && (
+              {!isCapturing && !isProcessing && cameraReady && !isErrorVisible && (
                 <>
                   <button
                     onClick={startCountdown}

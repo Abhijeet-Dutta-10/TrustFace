@@ -18,7 +18,7 @@ interface FormErrors {
   password?: string;
 }
 
-type PasswordStrength = 'low' | 'weak' | 'strong' | '';
+type PasswordStrength = 'poor' | 'weak' | 'strong' | '';
 
 interface Country {
   code: string;
@@ -132,22 +132,34 @@ const AuthPage = () => {
       returnedLoginData?: { email: string; password: string };
       mode?: string;
       countryCode?: string;
+      phoneCode?: string;
     } | null;
     
     // Handle register mode return
     if (state?.returnedFormData && state?.mode === 'register') {
-      const { returnedFormData, countryCode } = state;
+      const { returnedFormData, countryCode, phoneCode: returnedPhoneCode } = state;
       
       // Parse phone number to extract country code and number
       let phoneCode = '+91';
       let phoneNumber = returnedFormData.phone;
       
-      // First, try to use the countryCode if provided (handles shared dial codes like +1 for US/CA)
-      if (countryCode) {
+      // Prefer an explicit phone code if provided
+      if (returnedPhoneCode) {
+        const matchedCountryByDial = countries.find(
+          (country) => country.dialCode === returnedPhoneCode
+        );
+        if (matchedCountryByDial) {
+          setSelectedCountry(matchedCountryByDial);
+        }
+        phoneCode = returnedPhoneCode;
+        phoneNumber = returnedFormData.phone;
+      }
+      // Next, try to use the countryCode if provided (handles shared dial codes like +1 for US/CA)
+      else if (countryCode) {
         const matchedCountryByCode = countries.find(country => country.code === countryCode);
         if (matchedCountryByCode) {
           phoneCode = matchedCountryByCode.dialCode;
-          phoneNumber = returnedFormData.phone.substring(matchedCountryByCode.dialCode.length);
+          phoneNumber = returnedFormData.phone;
           setSelectedCountry(matchedCountryByCode);
         }
       } else {
@@ -236,8 +248,8 @@ const AuthPage = () => {
   };
 
   const validatePhone = (phone: string): boolean => {
-    // Phone number should be 6-15 digits
-    const phoneRegex = /^\d{6,15}$/;
+    // Phone number should be exactly 10 digits
+    const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(phone.replace(/[-\s]/g, ''));
   };
 
@@ -256,7 +268,7 @@ const AuthPage = () => {
     if (/[0-9]/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
     
-    if (strength <= 2) return 'low';
+    if (strength <= 2) return 'poor';
     if (strength <= 4) return 'weak';
     return 'strong';
   };
@@ -287,7 +299,7 @@ const AuthPage = () => {
       if (!formData.phone.trim()) {
         newErrors.phone = 'Phone number is required';
       } else if (!validatePhone(formData.phone)) {
-        newErrors.phone = 'Phone number must be 6-15 digits';
+        newErrors.phone = 'Phone number must be of 10 digits';
       }
     }
 
@@ -297,7 +309,7 @@ const AuthPage = () => {
     } else if (!isLogin) {
       // Only check password strength for sign up, not for sign in
       const strength = checkPasswordStrength(formData.password);
-      if (strength === 'low' || strength === 'weak') {
+      if (strength === 'poor' || strength === 'weak') {
         newErrors.password = `Password is too ${strength}. Please use a strong password.`;
       } else if (strength !== 'strong') {
         newErrors.password = 'Password must be strong';
@@ -377,8 +389,9 @@ const AuthPage = () => {
             mode: 'register',
             formData: {
               ...formData,
-              phone: `${formData.phoneCode}${formData.phone}`
+              phone: formData.phone
             },
+            phoneCode: formData.phoneCode,
             countryCode: selectedCountry.code
           } 
         });
@@ -556,7 +569,7 @@ const AuthPage = () => {
                           value={formData.phone}
                           onChange={handleInputChange}
                           className={`auth-input phone-input ${errors.phone ? 'error' : ''}`}
-                          maxLength={15}
+                          maxLength={10}
                         />
                       </div>
                       {errors.phone && <span className="auth-error">{errors.phone}</span>}
@@ -615,7 +628,7 @@ const AuthPage = () => {
                       <div className="password-strength">
                         <div className="password-strength-bars">
                           <div
-                            className={`strength-bar ${passwordStrength === 'low' ? 'low' : ''} ${passwordStrength === 'weak' ? 'weak' : ''} ${passwordStrength === 'strong' ? 'strong' : ''}`}
+                            className={`strength-bar ${passwordStrength === 'poor' ? 'poor' : ''} ${passwordStrength === 'weak' ? 'weak' : ''} ${passwordStrength === 'strong' ? 'strong' : ''}`}
                           ></div>
                           <div
                             className={`strength-bar ${passwordStrength === 'weak' ? 'weak' : ''} ${passwordStrength === 'strong' ? 'strong' : ''}`}
@@ -625,7 +638,7 @@ const AuthPage = () => {
                           ></div>
                         </div>
                         <span className={`password-strength-text ${passwordStrength}`}>
-                          {passwordStrength === 'low' && 'Low'}
+                          {passwordStrength === 'poor' && 'Poor'}
                           {passwordStrength === 'weak' && 'Weak'}
                           {passwordStrength === 'strong' && 'Strong'}
                         </span>

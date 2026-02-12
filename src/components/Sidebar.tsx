@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { clearAuthSession } from '../utils/authSession';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -288,6 +289,7 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
             className="menu-item"
             onClick={() => {
               if (item.name === 'Log out') {
+                clearAuthSession();
                 navigate('/auth');
                 return;
               }

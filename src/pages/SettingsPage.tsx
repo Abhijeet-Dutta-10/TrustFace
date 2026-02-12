@@ -1,8 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import { getAuthSession } from '../utils/authSession';
 import './SettingsPage.css';
 
 const SettingsPage = () => {
+  const session = getAuthSession();
+  const profileName = session.name || 'Abhijeet Dutta';
+  const profileEmail = session.email || 'abhijeet@trustface.ai';
+  const profilePhone = session.phone || '+91 98765 43210';
+  const profileInitials = profileName
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part[0]?.toUpperCase() || '')
+    .slice(0, 2)
+    .join('');
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [bannerMessage, setBannerMessage] = useState<string | null>(null);
   const bannerTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -200,9 +211,9 @@ const SettingsPage = () => {
               {expandedCard === 'profile' && (
                 <div className="settings-card-body">
                   <div className="profile-block">
-                    <div className="profile-avatar">AD</div>
+                  <div className="profile-avatar">{profileInitials || 'AD'}</div>
                     <div>
-                      <p className="profile-name">Abhijeet Dutta</p>
+                      <p className="profile-name">{profileName}</p>
                       {/* <p className="profile-role">Administrator</p> */}
                     </div>
                     <button className="outline-btn" type="button">Update Photo</button>
@@ -210,15 +221,15 @@ const SettingsPage = () => {
                   <div className="settings-fields">
                     <label className="settings-field">
                       Full Name
-                      <input type="text" defaultValue="Abhijeet Dutta" />
+                      <input type="text" defaultValue={profileName} />
                     </label>
                     <label className="settings-field">
                       Work Email
-                      <input type="email" defaultValue="abhijeet@trustface.ai" />
+                      <input type="email" defaultValue={profileEmail} />
                     </label>
                     <label className="settings-field">
                       Phone
-                      <input type="tel" defaultValue="+91 98765 43210" />
+                      <input type="tel" defaultValue={profilePhone} />
                     </label>
                   </div>
                   <div className="cards-section">

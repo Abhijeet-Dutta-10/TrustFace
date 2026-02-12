@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactCountryFlag from 'react-country-flag';
-import { registerUser } from '../services/authService';
+import { registerUser, loginUser } from '../services/authService';
+import { setAuthSession } from '../utils/authSession';
 import './CameraCapturePage.css';
 
 interface LocationState {
@@ -280,16 +281,63 @@ const CameraCapturePage = () => {
         // Ensure camera is stopped before navigation
         stopCamera();
         
+        const formattedPhone = state.phoneCode
+          ? `${state.phoneCode} ${state.formData.phone}`
+          : state.formData.phone;
+        setAuthSession({
+          name: data.name,
+          email: state.formData.email,
+          phone: formattedPhone,
+        });
+
         // Navigate to home page on success
-        // alert(`Welcome to TrustFace ${data.name}`);
         navigate('/home', { state: { name: data.name, email: state.formData.email } });
       } else if (state?.mode === 'login') {
-        // Login flow: Verify API will be called
+        if (!imageBase64.startsWith('data:image/jpeg;base64,')) {
+          throw new Error('Invalid image format. Please recapture.');
+        }
+        const password = state?.loginData?.password || '';
+        const email = state?.loginData?.email || state?.email || '';
+        if (!password) {
+          throw new Error('Password is missing. Please return and try again.');
+        }
+        if (!email) {
+          throw new Error('Email is missing. Please return and try again.');
+        }
+
+        const data = await loginUser({
+          imageBase64,
+          password,
+          email,
+        });
+        const responseName =
+          data && typeof (data as { name?: unknown }).name === 'string'
+            ? (data as { name: string }).name
+            : '';
+        const responsePhone =
+          data && typeof (data as { phone?: unknown }).phone === 'string'
+            ? (data as { phone: string }).phone
+            : data && typeof (data as { phoneNo?: unknown }).phoneNo === 'string'
+              ? (data as { phoneNo: string }).phoneNo
+              : '';
+
+        setAuthSession({
+          name: responseName,
+          email,
+          phone: responsePhone,
+        });
+
         // Ensure camera is stopped before navigation
         stopCamera();
-        
-        // For now, navigate to home (verify API endpoint to be implemented)
-        navigate('/home', { state: { email: state.email } });
+
+        // Navigate to home page on success
+        navigate('/home', {
+          state: {
+            email: state?.loginData?.email || state?.email,
+            name: responseName,
+            loginResponse: data,
+          },
+        });
       } else {
         // One-time user flow
         // Ensure camera is stopped before navigation
@@ -344,12 +392,26 @@ const CameraCapturePage = () => {
     setCameraReady(false);
 
     const isUserExists = /already exists/i.test(error);
+    const isIncorrectPassword = /incorrect password|invalid password|unauthorized/i.test(error);
+    const isIncorrectEmail = /incorrect email|invalid email|user not found/i.test(error);
     if (isUserExists) {
       navigate('/auth', {
         state: {
           returnedLoginData: {
             email: state?.formData?.email || state?.email || '',
             password: state?.formData?.password || '',
+          },
+          mode: 'login',
+        },
+      });
+      return;
+    }
+    if (isIncorrectPassword || isIncorrectEmail) {
+      navigate('/auth', {
+        state: {
+          returnedLoginData: {
+            email: state?.loginData?.email || state?.email || '',
+            password: state?.loginData?.password || '',
           },
           mode: 'login',
         },
@@ -551,7 +613,11 @@ const CameraCapturePage = () => {
                 <div className="camera-error">
                   <p>{error}</p>
                   <button onClick={handleErrorAction} className="error-button">
-                    {/already exists/i.test(error) ? 'Sign In' : 'Try Again'}
+                    {/already exists/i.test(error)
+                      ? 'Sign In'
+                      : /incorrect password|invalid password|unauthorized|incorrect email|invalid email|user not found/i.test(error)
+                        ? 'Go Back'
+                        : 'Try Again'}
                   </button>
                 </div>
               )}

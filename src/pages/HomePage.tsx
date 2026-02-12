@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import paths from '../routes/paths';
+import { getAuthSession } from '../utils/authSession';
 import './HomePage.css';
 
 const HomePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as { user_id?: string; email?: string; name?: string } | null;
-  const userName = state?.name || 'Abcd';
+  const session = getAuthSession();
+  const resolvedName = state?.name || session.name || 'Abcd';
+  const resolvedEmail = state?.email || session.email || '';
+  const userName = resolvedName;
   const userInitial = userName.trim().charAt(0).toUpperCase() || 'U';
   const [isBalanceVisible, setIsBalanceVisible] = useState(false);
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
@@ -63,12 +67,12 @@ const HomePage = () => {
             <div className="hero-header">
               <div className="hero-text">
                 <h1 className="home-title">
-                  {state?.name ? `Welcome ${state.name}` : 'Welcome'}
+                  {resolvedName ? `Welcome ${resolvedName}` : 'Welcome'}
                 </h1>
                 <p className="home-subtitle">Your secure facial recognition payment platform</p>
                 <div className="home-badges">
-                  {state?.email && (
-                    <span className="info-pill">Logged in as {state.email}</span>
+                  {resolvedEmail && (
+                    <span className="info-pill">Logged in as {resolvedEmail}</span>
                   )}
                   {state?.user_id && (
                     <span className="info-pill">User ID {state.user_id}</span>

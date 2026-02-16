@@ -85,7 +85,7 @@ const NotificationsPage = () => {
           <div className="notifications-hero">
             <div>
               <h1>Notifications</h1>
-              <p>Stay updated with recent activity and alerts.</p>
+              {/* <p>Stay updated with recent activity and alerts.</p> */}
             </div>
             <div className="notifications-actions">
               <button className="ghost-btn" type="button">Mark all read</button>

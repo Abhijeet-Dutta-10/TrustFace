@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar';
 import './TransactionsHistoryPage.css';
 
 type TransactionStatus = 'completed' | 'pending' | 'failed';
-type TransactionDirection = 'incoming' | 'outgoing';
+type TransactionDirection = 'incoming' | 'outgoing' | 'failed';
 
 interface TransactionItem {
   id: string;

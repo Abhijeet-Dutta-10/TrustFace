@@ -6,7 +6,7 @@ import './SettingsPage.css';
 const SettingsPage = () => {
   const session = getAuthSession();
   const profileName = session.name || 'Abhijeet Dutta';
-  const profileEmail = session.email || 'abhijeet@trustface.ai';
+  const profileEmail = session.email || 'abhijeet@trustface.com';
   const profilePhone = session.phone || '+91 98765 43210';
   const profileInitials = profileName
     .split(' ')

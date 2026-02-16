@@ -21,6 +21,7 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
   const pathToItemMap: Record<string, string> = {
     '/home': 'Dashboard',
     '/transactions-history': 'Transactions History',
+    '/friends': 'Friends',
     '/services': 'Services',
     '/services/bank-transfer': 'Services',
     '/services/bank-transfer/amount': 'Services',
@@ -30,6 +31,7 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
   const routeMap: Record<string, string> = {
     Dashboard: '/home',
     'Transactions History': '/transactions-history',
+    Friends: '/friends',
     Services: '/services',
     Notifications: '/notifications',
     Settings: '/settings',

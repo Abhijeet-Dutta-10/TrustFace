@@ -8,6 +8,7 @@ import BankTransferPage from '../pages/services/bank-transfer/BankTransferPage';
 import BankTransferAmountPage from '../pages/services/bank-transfer/BankTransferAmountPage';
 import SettingsPage from '../pages/SettingsPage';
 import NotificationsPage from '../pages/NotificationsPage';
+import FriendsPage from '../pages/FriendsPage';
 import TransactionsHistoryPage from '../pages/TransactionsHistoryPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import paths from './paths';
@@ -19,6 +20,7 @@ const AppRoutes = () => {
       <Route path={paths.auth} element={<AuthPage />} />
       <Route path={paths.cameraCapture} element={<CameraCapturePage />} />
       <Route path={paths.home} element={<HomePage />} />
+      <Route path={paths.friends} element={<FriendsPage />} />
       <Route path={paths.services} element={<ServicesPage />} />
       <Route path={paths.bankTransfer} element={<BankTransferPage />} />
       <Route path={paths.bankTransferAmount} element={<BankTransferAmountPage />} />

@@ -240,20 +240,28 @@
 }
 
 .secondary-button {
-  padding: 0.85rem 1.6rem;
+  padding: 1.1rem 2.6rem;
   border-radius: 999px;
   border: 2px solid #000000;
-  background: transparent;
-  color: #1f2937;
+  background: black;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .secondary-button:hover {
-  background: #2563eb;
-  border-color: #1d4ed8;
-  color: white;
+  background: white;
+  border-color: black;
+  color: black;
+}
+
+.secondary-button:focus,
+.secondary-button:focus-visible,
+.secondary-button:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .stats-row {

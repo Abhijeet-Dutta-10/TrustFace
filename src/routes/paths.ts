@@ -4,6 +4,7 @@ const paths = {
   cameraCapture: '/camera-capture',
   home: '/home',
   friends: '/friends',
+  offersRewards: '/offers-rewards',
   services: '/services',
   bankTransfer: '/services/bank-transfer',
   bankTransferAmount: '/services/bank-transfer/amount',

@@ -264,7 +264,7 @@ const HomePage = () => {
                   </button>
                 </div>
                 <div className="actions-grid">
-                  <button className="action-card" type="button">
+                  <button className="action-card" type="button" onClick={() => navigate(paths.friends)}>
                     <span className="action-label">Send Money</span>
                     <span className="action-icon action-icon--large" aria-hidden="true">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -273,7 +273,7 @@ const HomePage = () => {
                       </svg>
                     </span>
                   </button>
-                  <button className="action-card" type="button">
+                  <button className="action-card" type="button" onClick={() => navigate(paths.friends)}>
                     <span className="action-label">Request Money</span>
                     <span className="action-icon action-icon--large" aria-hidden="true">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

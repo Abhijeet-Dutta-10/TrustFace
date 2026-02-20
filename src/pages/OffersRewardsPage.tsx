@@ -73,7 +73,7 @@ const OffersRewardsPage = () => {
     {
       id: 'offer-3',
       merchant: 'Uber',
-      title: '₹60 off on 3 rides',
+      title: '₹60 off on first 3 rides',
       // subtitle: 'Use UPI ID to pay',
       expiry: 'Expires in 10 days',
       tag: 'Travel',

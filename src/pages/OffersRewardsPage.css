@@ -424,7 +424,8 @@
 .offers-page .offer-merchant {
   margin: 0 0 6px 0;
   font-weight: 700;
-  color: #111827;
+  color: grey;
+  font-size: 18px;
 }
 
 .offers-page .offer-body h3 {

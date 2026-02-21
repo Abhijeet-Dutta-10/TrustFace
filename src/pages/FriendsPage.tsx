@@ -22,9 +22,11 @@ const FriendsPage = () => {
       subtitle: 'Transfer money between your accounts',
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 12h18" />
-          <path d="M12 3l4 4-4 4" />
-          <path d="M12 21l-4-4 4-4" />
+          <rect x="3" y="5" width="8" height="10" rx="2" />
+          <rect x="13" y="9" width="8" height="10" rx="2" />
+          <path d="M11 10h2" />
+          <path d="M9 8l-2 2 2 2" />
+          <path d="M15 16l2-2-2-2" />
         </svg>
       ),
     },
@@ -34,10 +36,12 @@ const FriendsPage = () => {
       subtitle: 'Share payment with a group',
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="9" cy="7" r="4" />
-          <circle cx="17" cy="7" r="3" />
-          <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
-          <path d="M17 21v-2a3 3 0 0 0-2-2.82" />
+          <circle cx="8" cy="8" r="3" />
+          <circle cx="16" cy="8" r="3" />
+          <path d="M2 20v-1a5 5 0 0 1 5-5h2" />
+          <path d="M22 20v-1a5 5 0 0 0-5-5h-2" />
+          <path d="M12 12v7" />
+          <path d="M9 16l3 3 3-3" />
         </svg>
       ),
     },
@@ -62,6 +66,7 @@ const FriendsPage = () => {
     { id: 'upi-12', name: 'Irfan Shaikh', phone: '+91 90987 25114' },
   ];
   const normalizedQuery = searchQuery.trim().toLowerCase();
+  const hasSearch = Boolean(normalizedQuery);
   const filteredRecents = useMemo(() => {
     if (!normalizedQuery) {
       return recents;
@@ -127,93 +132,126 @@ const FriendsPage = () => {
             <button className="ghost-btn" type="button">Manage contacts</button>
           </div>
 
-          <section className="friends-section">
-            <div className="friends-section-header">
-              <h2>Recents</h2>
-              <button
-                className="link-btn"
-                type="button"
-                onClick={() => allPeopleRef.current?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                View all
-              </button>
-            </div>
-            <div className="friends-list">
-              {filteredRecents.map((person) => (
-                <div key={person.id} className="friend-item">
-                  <div className="friend-avatar">
-                    <span>{getInitials(person.name) || 'U'}</span>
-                  </div>
-                  <div className="friend-details">
-                    <p className="friend-name">{person.name}</p>
-                    <p className="friend-phone">{person.phone}</p>
-                  </div>
-                  <div className="friend-meta">
-                    <button className="ghost-btn small" type="button">Request</button>
-                    <button className="primary-btn small" type="button">Pay</button>
-                  </div>
+          {hasSearch ? (
+            <section className="friends-section">
+              <div className="friends-section-header">
+                <h2>People</h2>
+              </div>
+              {sortedAllPeople.length ? (
+                <div className="friends-list">
+                  {sortedAllPeople.map((person) => (
+                    <div key={person.id} className="friend-item">
+                      <div className="friend-avatar muted">
+                        <span>{getInitials(person.name) || 'U'}</span>
+                      </div>
+                      <div className="friend-details">
+                        <p className="friend-name">{person.name}</p>
+                        <p className="friend-phone">{person.phone}</p>
+                      </div>
+                      <div className="friend-meta">
+                        <button className="ghost-btn small" type="button">Request</button>
+                        <button className="primary-btn small" type="button">Pay</button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
+              ) : (
+                <p className="friends-empty">
+                  Can not find exact matches for your search. try using another search term.
+                </p>
+              )}
+            </section>
+          ) : (
+            <>
+              <section className="friends-section">
+                <div className="friends-section-header">
+                  <h2>Recents</h2>
+                  <button
+                    className="link-btn"
+                    type="button"
+                    onClick={() => allPeopleRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    View all
+                  </button>
+                </div>
+                <div className="friends-list">
+                  {filteredRecents.map((person) => (
+                    <div key={person.id} className="friend-item">
+                      <div className="friend-avatar">
+                        <span>{getInitials(person.name) || 'U'}</span>
+                      </div>
+                      <div className="friend-details">
+                        <p className="friend-name">{person.name}</p>
+                        <p className="friend-phone">{person.phone}</p>
+                      </div>
+                      <div className="friend-meta">
+                        <button className="ghost-btn small" type="button">Request</button>
+                        <button className="primary-btn small" type="button">Pay</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
 
-          <section className="friends-section" ref={allPeopleRef}>
-            <div className="friends-section-header">
-              <h2>All people on UPI</h2>
-              <button
-                className="link-btn"
-                type="button"
-                onClick={() => setIsSortAsc((prev) => !prev)}
-              >
-                Sort
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ marginLeft: '6px', verticalAlign: 'middle' }}
-                  aria-hidden="true"
-                >
-                  <path d="M4 17l4 4 4-4" />
-                  <path d="M8 5v16" />
-                  <path d="M20 7l-4-4-4 4" />
-                  <path d="M16 19V3" />
-                </svg>
-              </button>
-            </div>
-            <div className="upi-actions">
-              {upiActions.map((action) => (
-                <div key={action.id} className="upi-action-card">
-                  <div className="upi-action-icon">{action.icon}</div>
-                  <div>
-                    <p className="upi-action-title">{action.title}</p>
-                    <p className="upi-action-subtitle">{action.subtitle}</p>
-                  </div>
+              <section className="friends-section" ref={allPeopleRef}>
+                <div className="friends-section-header">
+                  <h2>All people on UPI</h2>
+                  <button
+                    className="link-btn"
+                    type="button"
+                    onClick={() => setIsSortAsc((prev) => !prev)}
+                  >
+                    Sort
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ marginLeft: '6px', verticalAlign: 'middle' }}
+                      aria-hidden="true"
+                    >
+                      <path d="M4 17l4 4 4-4" />
+                      <path d="M8 5v16" />
+                      <path d="M20 7l-4-4-4 4" />
+                      <path d="M16 19V3" />
+                    </svg>
+                  </button>
                 </div>
-              ))}
-            </div>
-            <div className="friends-list">
-              {sortedAllPeople.map((person) => (
-                <div key={person.id} className="friend-item">
-                  <div className="friend-avatar muted">
-                    <span>{getInitials(person.name) || 'U'}</span>
-                  </div>
-                  <div className="friend-details">
-                    <p className="friend-name">{person.name}</p>
-                    <p className="friend-phone">{person.phone}</p>
-                  </div>
-                  <div className="friend-meta">
-                    <button className="ghost-btn small" type="button">Request</button>
-                    <button className="primary-btn small" type="button">Pay</button>
-                  </div>
+                <div className="upi-actions">
+                  {upiActions.map((action) => (
+                    <div key={action.id} className="upi-action-card">
+                      <div className="upi-action-icon">{action.icon}</div>
+                      <div>
+                        <p className="upi-action-title">{action.title}</p>
+                        <p className="upi-action-subtitle">{action.subtitle}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
+                <div className="friends-list">
+                  {sortedAllPeople.map((person) => (
+                    <div key={person.id} className="friend-item">
+                      <div className="friend-avatar muted">
+                        <span>{getInitials(person.name) || 'U'}</span>
+                      </div>
+                      <div className="friend-details">
+                        <p className="friend-name">{person.name}</p>
+                        <p className="friend-phone">{person.phone}</p>
+                      </div>
+                      <div className="friend-meta">
+                        <button className="ghost-btn small" type="button">Request</button>
+                        <button className="primary-btn small" type="button">Pay</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
         </div>
       </div>
     </div>

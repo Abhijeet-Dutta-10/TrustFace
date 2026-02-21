@@ -124,6 +124,16 @@
   gap: 12px;
 }
 
+.friends-empty {
+  margin: 0;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px dashed #d8dde6;
+  color: #64748b;
+  font-weight: 500;
+}
+
 .friend-item {
   display: grid;
   grid-template-columns: auto 1fr auto;

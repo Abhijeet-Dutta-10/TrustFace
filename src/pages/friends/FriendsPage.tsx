@@ -1,12 +1,28 @@
 import { useMemo, useRef, useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import { useNavigate } from 'react-router-dom';
+import Sidebar from '../../components/Sidebar';
+import paths from '../../routes/paths';
+import { getAuthSession } from '../../utils/authSession';
 import './FriendsPage.css';
 
+type FriendPerson = {
+  id: string;
+  name: string;
+  phone: string;
+};
+
 const FriendsPage = () => {
+  const navigate = useNavigate();
+  const authSession = getAuthSession();
+  const senderName = authSession.name?.trim() || 'You';
+  const senderPhone = authSession.phone?.trim() || '+91 90000 00000';
+  const senderUpiId = senderName
+    ? `${senderName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'you'}@upi`
+    : 'you@upi';
   const allPeopleRef = useRef<HTMLDivElement | null>(null);
   const [isSortAsc, setIsSortAsc] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const recents = [
+  const recents: FriendPerson[] = [
     { id: 'recent-1', name: 'Arjun Ravi', phone: '+91 98653 58769' },
     { id: 'recent-2', name: 'Numan Ali', phone: '+91 92219 70600' },
     { id: 'recent-3', name: 'Surya K', phone: '+91 91168 52659' },
@@ -47,7 +63,7 @@ const FriendsPage = () => {
     },
   ];
 
-  const allPeople = [
+  const allPeople: FriendPerson[] = [
     ...recents.map((person, index) => ({
       ...person,
       id: `upi-recent-${index + 1}`,
@@ -97,6 +113,28 @@ const FriendsPage = () => {
       .slice(0, 2)
       .map((part) => part[0]?.toUpperCase() || '')
       .join('');
+
+  const getUpiIdFromName = (name: string) => {
+    const compact = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return compact ? `${compact}@upi` : 'friend@upi';
+  };
+
+  const handlePay = (person: FriendPerson) => {
+    navigate(paths.friendsAmount, {
+      state: {
+        sender: {
+          name: senderName,
+          phone: senderPhone,
+          upiId: senderUpiId,
+        },
+        receiver: {
+          name: person.name,
+          phone: person.phone,
+          upiId: getUpiIdFromName(person.name),
+        },
+      },
+    });
+  };
 
   return (
     <div className="friends-page">
@@ -150,14 +188,16 @@ const FriendsPage = () => {
                       </div>
                       <div className="friend-meta">
                         <button className="ghost-btn small" type="button">Request</button>
-                        <button className="primary-btn small" type="button">Pay</button>
+                        <button className="primary-btn small" type="button" onClick={() => handlePay(person)}>
+                          Pay
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <p className="friends-empty">
-                  Can not find exact matches for your search. try using another search term.
+                  Can not find exact matches for your search. Try using another search term.
                 </p>
               )}
             </section>
@@ -186,7 +226,9 @@ const FriendsPage = () => {
                       </div>
                       <div className="friend-meta">
                         <button className="ghost-btn small" type="button">Request</button>
-                        <button className="primary-btn small" type="button">Pay</button>
+                        <button className="primary-btn small" type="button" onClick={() => handlePay(person)}>
+                          Pay
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -244,7 +286,9 @@ const FriendsPage = () => {
                       </div>
                       <div className="friend-meta">
                         <button className="ghost-btn small" type="button">Request</button>
-                        <button className="primary-btn small" type="button">Pay</button>
+                        <button className="primary-btn small" type="button" onClick={() => handlePay(person)}>
+                          Pay
+                        </button>
                       </div>
                     </div>
                   ))}

@@ -7,9 +7,11 @@ import ServicesPage from '../pages/services/ServicesPage';
 import BankTransferPage from '../pages/services/bank-transfer/BankTransferPage';
 import BankTransferAmountPage from '../pages/services/bank-transfer/BankTransferAmountPage';
 import BankTransferConfirmPage from '../pages/services/bank-transfer/BankTransferConfirmPage';
+import FriendsAmountPage from '../pages/friends/FriendsAmountPage';
+import FriendsConfirmPage from '../pages/friends/FriendsConfirmPage';
 import SettingsPage from '../pages/SettingsPage';
 import NotificationsPage from '../pages/NotificationsPage';
-import FriendsPage from '../pages/FriendsPage';
+import FriendsPage from '../pages/friends/FriendsPage';
 import OffersRewardsPage from '../pages/OffersRewardsPage';
 import TransactionsHistoryPage from '../pages/TransactionsHistoryPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -28,6 +30,8 @@ const AppRoutes = () => {
       <Route path={paths.bankTransfer} element={<BankTransferPage />} />
       <Route path={paths.bankTransferAmount} element={<BankTransferAmountPage />} />
       <Route path={paths.bankTransferConfirm} element={<BankTransferConfirmPage />} />
+      <Route path={paths.friendsAmount} element={<FriendsAmountPage />} />
+      <Route path={paths.friendsConfirm} element={<FriendsConfirmPage />} />
       <Route path={paths.settings} element={<SettingsPage />} />
       <Route path={paths.notifications} element={<NotificationsPage />} />
       <Route path={paths.transactionsHistory} element={<TransactionsHistoryPage />} />

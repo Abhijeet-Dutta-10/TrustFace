@@ -9,6 +9,8 @@ const paths = {
   bankTransfer: '/services/bank-transfer',
   bankTransferAmount: '/services/bank-transfer/amount',
   bankTransferConfirm: '/services/bank-transfer/confirm',
+  friendsAmount: '/friends/amount',
+  friendsConfirm: '/friends/confirm',
   settings: '/settings',
   notifications: '/notifications',
   transactionsHistory: '/transactions-history',

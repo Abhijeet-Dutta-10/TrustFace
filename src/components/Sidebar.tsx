@@ -22,6 +22,8 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
     '/home': 'Dashboard',
     '/transactions-history': 'Transactions History',
     '/friends': 'Friends',
+    '/friends/amount': 'Friends',
+    '/friends/confirm': 'Friends',
     '/offers-rewards': 'Offers & Rewards',
     '/services': 'Services',
     '/services/bank-transfer': 'Services',

@@ -22,6 +22,8 @@ const BankTransferAmountPage = () => {
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const quickAmounts = [500, 1000, 2000, 5000];
+  const maxTransferAmount = 100000;
+  const limitDisplay = maxTransferAmount.toLocaleString('en-IN');
 
   const sender = state.sender ?? {};
   const receiver = state.receiver ?? {};
@@ -39,16 +41,18 @@ const BankTransferAmountPage = () => {
   const senderLabel = sender.name || sender.account || 'Sender Bank';
   const receiverLabel = receiver.name || receiver.account || 'Receiver Bank';
   const summaryLine = useMemo(() => {
-    return `${senderLabel} → ${receiverLabel}`;
+    return `${senderLabel} -> ${receiverLabel}`;
   }, [receiverLabel, senderLabel]);
 
   const receiverInitial = receiverLabel?.trim().charAt(0).toUpperCase() || 'R';
 
-  const isAmountValid = useMemo(() => {
+  const { isAmountValid, isAmountOverLimit } = useMemo(() => {
     const normalized = amount.replace(/,/g, '').trim();
     const value = Number(normalized);
-    return Number.isFinite(value) && value > 0;
-  }, [amount]);
+    const isValid = Number.isFinite(value) && value > 0;
+    const isOver = Number.isFinite(value) && value > maxTransferAmount;
+    return { isAmountValid: isValid && !isOver, isAmountOverLimit: isOver };
+  }, [amount, maxTransferAmount]);
 
   const handleContinue = () => {
     if (!isAmountValid) {
@@ -95,7 +99,7 @@ const BankTransferAmountPage = () => {
                 <p className="bank-amount-account-meta">{receiver.ifsc || 'Receiver IFSC'}</p>
               </div>
             </div>
-            
+
             <div className="bank-amount-divider" />
 
             <div className="bank-amount-input">
@@ -121,10 +125,13 @@ const BankTransferAmountPage = () => {
                   </div>
                   <div className="bank-amount-info-card">
                     <p className="bank-amount-info-label">Transaction Limit</p>
-                    <p className="bank-amount-info-value">₹1,00,000</p>
+                    <p className="bank-amount-info-value">₹{limitDisplay}</p>
                   </div>
                 </div>
               </div>
+              {isAmountOverLimit && (
+                <p className="bank-field-error">Amount exceeds the limit of ₹{limitDisplay}.</p>
+              )}
               <div className="bank-amount-quick">
                 {quickAmounts.map((value) => (
                   <button

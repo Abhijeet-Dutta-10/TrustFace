@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import paths from '../../../routes/paths';
 import Sidebar from '../../../components/Sidebar';
 import './BankTransferAmountPage.css';
 
@@ -20,9 +21,20 @@ const BankTransferAmountPage = () => {
   const state = (location.state as TransferState | null) ?? {};
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const quickAmounts = [500, 1000, 2000, 5000];
 
   const sender = state.sender ?? {};
   const receiver = state.receiver ?? {};
+  const formatAccount = (account?: string) => {
+    if (!account) {
+      return 'XXXX XXXX XXXX';
+    }
+    const digits = account.replace(/\D/g, '');
+    const lastFour = digits.slice(-4);
+    return lastFour ? `XXXX XXXX ${lastFour}` : 'XXXX XXXX XXXX';
+  };
+  const senderAccount = formatAccount(sender.account);
+  const receiverAccount = formatAccount(receiver.account);
 
   const senderLabel = sender.name || sender.account || 'Sender Bank';
   const receiverLabel = receiver.name || receiver.account || 'Receiver Bank';
@@ -42,9 +54,10 @@ const BankTransferAmountPage = () => {
     if (!isAmountValid) {
       return;
     }
-    navigate('/camera-capture', {
+    navigate(paths.bankTransferConfirm, {
       state: {
         amount,
+        note,
         sender,
         receiver,
       },
@@ -56,49 +69,81 @@ const BankTransferAmountPage = () => {
       <Sidebar />
       <div className="bank-amount-main">
         <div className="bank-amount-content">
-          <button className="back-button-camera" onClick={() => navigate(-1)} aria-label="Go back">
-            <div className="back-button-box">
-              <span className="back-button-elem">
-                <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z" />
-                </svg>
-              </span>
-              <span className="back-button-elem">
-                <svg viewBox="0 0 46 40">
-                  <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z" />
-                </svg>
-              </span>
-            </div>
-          </button>
-
           <section className="bank-amount-card">
-            <div className="bank-amount-avatar">{receiverInitial}</div>
-            <p className="bank-amount-paying">Paying {receiverLabel}</p>
-            <p className="bank-amount-route">{summaryLine}</p>
-            <p className="bank-amount-accounts">
-              {sender.ifsc || 'Sender IFSC'} • {receiver.ifsc || 'Receiver IFSC'}
-            </p>
+            <div className="bank-amount-header">
+              <div className="bank-amount-avatar">{receiverInitial}</div>
+              <div className="bank-amount-title">
+                <p className="bank-amount-paying">Paying {receiverLabel}</p>
+                <p className="bank-amount-route">{summaryLine}</p>
+              </div>
+              <div className="bank-amount-badge">Face Verification Enabled</div>
+            </div>
+
+            <div className="bank-amount-accounts-grid">
+              <div className="bank-amount-account-card">
+                <p className="bank-amount-label">From</p>
+                <p className="bank-amount-account-value">{senderAccount}</p>
+                <p className="bank-amount-account-meta">{sender.ifsc || 'Sender IFSC'}</p>
+              </div>
+              <div className="bank-amount-account-card">
+                <p className="bank-amount-label">To</p>
+                <p className="bank-amount-account-value">{receiverAccount}</p>
+                <p className="bank-amount-account-meta">{receiver.ifsc || 'Receiver IFSC'}</p>
+              </div>
+            </div>
+            
+            <div className="bank-amount-divider" />
 
             <div className="bank-amount-input">
-              <p className="bank-amount-label">Amount</p>
-              <div className="bank-amount-field">
-                <span>₹</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChange={(event) => setAmount(event.target.value)}
-                />
+              <div className="bank-amount-label-row">
+                <p className="bank-amount-label">Amount</p>
+                <p className="bank-amount-caption">Instant transfer</p>
+              </div>
+              <div className="bank-amount-field-row">
+                <div className="bank-amount-field">
+                  <span>₹</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChange={(event) => setAmount(event.target.value)}
+                  />
+                </div>
+                <div className="bank-amount-info">
+                  <div className="bank-amount-info-card">
+                    <p className="bank-amount-info-label">Transaction Fee</p>
+                    <p className="bank-amount-info-value">Free</p>
+                  </div>
+                  <div className="bank-amount-info-card">
+                    <p className="bank-amount-info-label">Transaction Limit</p>
+                    <p className="bank-amount-info-value">₹1,00,000</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bank-amount-quick">
+                {quickAmounts.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className="bank-amount-chip"
+                    onClick={() => setAmount(value.toString())}
+                  >
+                    ₹{value.toLocaleString('en-IN')}
+                  </button>
+                ))}
               </div>
               <p className="bank-amount-hint">This amount will be verified with face recognition.</p>
             </div>
 
             <div className="bank-amount-note">
-              <p className="bank-amount-label">Note</p>
+              <div className="bank-amount-label-row">
+                <p className="bank-amount-label">Note</p>
+                <p className="bank-amount-caption">Optional</p>
+              </div>
               <input
                 type="text"
-                placeholder="Add note"
+                placeholder="Add a short note (e.g., Rent for Feb)"
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
               />
@@ -106,6 +151,9 @@ const BankTransferAmountPage = () => {
           </section>
 
           <div className="bank-amount-actions">
+            <button className="bank-amount-cancel" type="button" onClick={() => navigate(-1)}>
+              Cancel
+            </button>
             <button
               className="bank-amount-continue"
               type="button"

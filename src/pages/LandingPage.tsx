@@ -24,7 +24,7 @@ const LandingPage = () => {
     <div className={`landing-page ${isExiting ? 'page-exit' : ''}`}>
       <div className="landing-container">
         <div className="landing-content">
-          <header className="landing-header">
+          {/*<header className="landing-header">
             <div className="brand-pill">
               <div className="brand-icon">
                 <svg
@@ -57,8 +57,8 @@ const LandingPage = () => {
             </div>
             {/* <button type="button" className="header-cta" onClick={handleGetStarted}>
               Get Started
-            </button> */}
-          </header>
+            </button> *
+          </header>*/}
 
           <section className="hero-section">
             <div className="hero-left">

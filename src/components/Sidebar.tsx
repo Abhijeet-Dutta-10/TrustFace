@@ -26,6 +26,7 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false }: SidebarProps) => {
     '/services': 'Services',
     '/services/bank-transfer': 'Services',
     '/services/bank-transfer/amount': 'Services',
+    '/services/bank-transfer/confirm': 'Services',
     '/notifications': 'Notifications',
     '/settings': 'Settings',
   };

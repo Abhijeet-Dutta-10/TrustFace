@@ -1,9 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../../components/Sidebar';
 import './BankTransferPage.css';
 
 type TransferStep = 'details' | 'verify';
+type BankTransferDraft = {
+  step?: TransferStep;
+  senderAccount?: string;
+  senderIfsc?: string;
+  receiverAccount?: string;
+  receiverIfsc?: string;
+  senderAccountConfirm?: string;
+  senderName?: string;
+  receiverAccountConfirm?: string;
+  receiverName?: string;
+};
+
+const BANK_TRANSFER_DRAFT_KEY = 'bankTransferDraft';
 
 const BankTransferPage = () => {
   const navigate = useNavigate();
@@ -16,6 +29,59 @@ const BankTransferPage = () => {
   const [senderName, setSenderName] = useState('');
   const [receiverAccountConfirm, setReceiverAccountConfirm] = useState('');
   const [receiverName, setReceiverName] = useState('');
+  const skipSaveRef = useRef(true);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem(BANK_TRANSFER_DRAFT_KEY);
+    if (!stored) {
+      return;
+    }
+    try {
+      const draft = JSON.parse(stored) as BankTransferDraft;
+      if (draft.step === 'details' || draft.step === 'verify') {
+        setStep(draft.step);
+      }
+      setSenderAccount(draft.senderAccount ?? '');
+      setSenderIfsc(draft.senderIfsc ?? '');
+      setReceiverAccount(draft.receiverAccount ?? '');
+      setReceiverIfsc(draft.receiverIfsc ?? '');
+      setSenderAccountConfirm(draft.senderAccountConfirm ?? '');
+      setSenderName(draft.senderName ?? '');
+      setReceiverAccountConfirm(draft.receiverAccountConfirm ?? '');
+      setReceiverName(draft.receiverName ?? '');
+    } catch {
+      sessionStorage.removeItem(BANK_TRANSFER_DRAFT_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    const draft: BankTransferDraft = {
+      step,
+      senderAccount,
+      senderIfsc,
+      receiverAccount,
+      receiverIfsc,
+      senderAccountConfirm,
+      senderName,
+      receiverAccountConfirm,
+      receiverName,
+    };
+    if (skipSaveRef.current) {
+      skipSaveRef.current = false;
+      return;
+    }
+    sessionStorage.setItem(BANK_TRANSFER_DRAFT_KEY, JSON.stringify(draft));
+  }, [
+    receiverAccount,
+    receiverAccountConfirm,
+    receiverIfsc,
+    receiverName,
+    senderAccount,
+    senderAccountConfirm,
+    senderIfsc,
+    senderName,
+    step,
+  ]);
 
   const isInitialComplete = useMemo(() => {
     return (

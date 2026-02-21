@@ -64,6 +64,10 @@ const BankTransferAmountPage = () => {
     });
   };
 
+  const handleCancel = () => {
+    navigate(paths.bankTransfer);
+  };
+
   return (
     <div className="bank-amount-page">
       <Sidebar />
@@ -151,7 +155,7 @@ const BankTransferAmountPage = () => {
           </section>
 
           <div className="bank-amount-actions">
-            <button className="bank-amount-cancel" type="button" onClick={() => navigate(-1)}>
+            <button className="bank-amount-cancel" type="button" onClick={handleCancel}>
               Cancel
             </button>
             <button
